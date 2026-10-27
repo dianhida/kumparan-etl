@@ -794,3 +794,4 @@ docker-compose exec -T postgres psql -U kumparan -d kumparan -c "TRUNCATE TABLE 
 - Hard deletes: Silver row physically removed; Bronze preserves full history
 - Airflow DAGs not yet deployed (Phase 7+)
 - DAG tests require Airflow installation (run in Airflow container)# kumparan-etl
+# kumparan-etl
