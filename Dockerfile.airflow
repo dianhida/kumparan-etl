@@ -1,0 +1,26 @@
+FROM apache/airflow:2.9.1
+
+USER root
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy project scripts and sql into the image for reliable imports
+COPY scripts /opt/airflow/scripts
+COPY sql /opt/airflow/sql
+
+# Ensure scripts are importable and have correct permissions (airflow user UID=50000)
+RUN chown -R 50000:0 /opt/airflow/scripts /opt/airflow/sql
+
+# Switch to airflow user for pip install
+USER airflow
+
+# Install Python dependencies
+COPY requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
+
+# Ensure scripts are importable
+ENV PYTHONPATH="/opt/airflow:${PYTHONPATH}"
